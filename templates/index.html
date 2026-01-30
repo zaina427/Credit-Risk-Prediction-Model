@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Risk Assessment | FinTech AI</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: var(--card);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-predict {
+            grid-column: span 2;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.3s;
+        }
+
+        .btn-predict:hover {
+            opacity: 0.9;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background: #f1f5f9;
+            border-left: 5px solid var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .grid-form { grid-template-columns: 1fr; }
+            .btn-predict { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1> Credit Risk Predictor</h1>
+    <form action="/predict" method="POST" class="grid-form">
+        
+        <div class="form-group">
+            <label>Checking Account Status</label>
+            <select name="status">
+                <option value="1">< 100 DM</option>
+                <option value="2">0 <= ... < 200 DM</option>
+                <option value="3">No checking account</option>
+                <option value="4">>= 200 DM</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Duration (Months)</label>
+            <input type="number" name="duration" placeholder="e.g. 24" required>
+        </div>
+
+        <div class="form-group">
+            <label>Credit History</label>
+            <select name="credit_history">
+                <option value="1">Critical Account</option>
+                <option value="2">Existing Paid Back</option>
+                <option value="3">Delay in Past</option>
+                <option value="4">No Credits/All Paid</option>
+                <option value="5">All Paid (Current Bank)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Purpose</label>
+            <select name="purpose">
+                <option value="1">Domestic Appliances</option>
+                <option value="2">Retraining</option>
+                <option value="3">Radio/TV</option>
+                <option value="4">Car (New)</option>
+                <option value="5">Car (Used)</option>
+                <option value="6">Others</option>
+                <option value="7">Repairs</option>
+                <option value="8">Education</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Credit Amount</label>
+            <input type="number" name="amount" placeholder="e.g. 3000" required>
+        </div>
+        <div class="form-group">
+            <label>Savings Account</label>
+            <select name="savings">
+                <option value="1">Unknown/None</option>
+                <option value="2">< 100 DM</option>
+                <option value="3">500 <= ... < 1000 DM</option>
+                <option value="4">>= 1000 DM</option>
+                <option value="5">100 <= ... < 500</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Employment Duration</label>
+            <select name="employment_duration">
+                <option value="1">>= 7 years</option>
+                <option value="2">1-4 years</option>
+                <option value="3">4-7 years</option>
+                <option value="4">Unemployed</option>
+                <option value="5">< 1 year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Installment Rate (%)</label>
+            <input type="number" name="installment_rate" placeholder="1-4" required>
+        </div>
+
+        <div class="form-group">
+            <label>Personal Status & Sex</label>
+            <select name="personal_status_sex">
+                <option value="1">Male: Single</option>
+                <option value="2">Female: Div/Sep/Mar</option>
+                <option value="3">Male: Div/Sep</option>
+                <option value="4">Male: Mar/Wid</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Other Debtors/Guarantors</label>
+            <select name="other_debtors">
+                <option value="1">None</option>
+                <option value="2">Guarantor</option>
+                <option value="3">Co-applicant</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Present Residence Since</label>
+            <input type="number" name="present_residence" placeholder="1-4 years" required>
+        </div>
+        <div class="form-group">
+            <label>Property Type</label>
+            <select name="property">
+                <option value="1">Real Estate</option>
+                <option value="2">Life Insurance</option>
+                <option value="3">Unknown/No Property</option>
+                <option value="4">Car/Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Age (Years)</label>
+            <input type="number" name="age" placeholder="e.g. 35" required>
+        </div>
+        <div class="form-group">
+            <label>Other Installment Plans</label>
+            <select name="other_installment_plans">
+                <option value="1">None</option>
+                <option value="2">Bank</option>
+                <option value="3">Stores</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Housing</label>
+            <select name="housing">
+                <option value="1">Own</option>
+                <option value="2">For Free</option>
+                <option value="3">Rent</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Number of Existing Credits</label>
+            <input type="number" name="number_credits" placeholder="e.g. 1" required>
+        </div>
+
+        <div class="form-group">
+            <label>Job Category</label>
+            <select name="job">
+                <option value="1">Skilled</option>
+                <option value="2">Unskilled Resident</option>
+                <option value="3">Management/Highly Qualified</option>
+                <option value="4">Unemployed/Unskilled Non-resident</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Number of People Liable</label>
+            <input type="number" name="people_liable" placeholder="1 or 2" required>
+        </div>
+
+        <div class="form-group">
+            <label>Telephone</label>
+            <select name="telephone">
+                <option value="1">Yes</option>
+                <option value="2">No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Foreign Worker</label>
+            <select name="foreign_worker">
+                <option value="1">Yes</option>
+                <option value="2">No</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-predict">Analyze Credit Risk</button>
+    </form>
+
+    {% if prediction_text %}
+    <div class="result-box">
+        {{ prediction_text }}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
